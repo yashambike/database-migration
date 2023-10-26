@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <!-- Include your custom CSS styles if needed -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
+    <style>
+        /* Custom styles for the header */
+        .header {
+            background-color: #165c96; /* Change to your desired background color */
+            color: #fff; /* Change to your desired text color */
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3rem; /* Adjust font size as needed */
+        }
+
+        .header p {
+            font-size: 1.5rem; /* Adjust font size as needed */
+        }
+
+        /* Custom styles for the container */
+        .container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light mbta-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/homepage">MBTA</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/migrate">Migrate</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/datatables">Show Databases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/drop_database">Remove Databases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search">Search</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="display-4">MBTA: Data Migration</h1>
+            <p class="lead">Your one-stop solution for database management.</p>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <div class="container">
+        <!-- Your tab content goes here -->
+    </div>
+
+    <!-- Include Bootstrap JS (jQuery is required) -->
+    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+</body>
+</html>

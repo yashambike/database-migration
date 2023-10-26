@@ -1,0 +1,43 @@
+/* Define the CSS style for the table header */
+.ht_master thead th {
+    background-color: #007bff;
+    /* Change this to your desired background color */
+    color: #fff;
+    /* Change this to your desired text color */
+}
+
+.mbta-logo {
+    width: 40px; /* Adjust the width as needed */
+    height: auto; /* Automatically adjust the height to maintain aspect ratio */
+    margin-right: 10px; /* Add margin for spacing between logo and text */
+}
+
+/* Custom CSS for the MBTA-like navigation bar */
+
+.mbta-navbar {
+    background-color: #006aa7;
+}
+
+.mbta-navbar .navbar-brand {
+    color: #fff;
+}
+
+.mbta-navbar .navbar-toggler-icon {
+    background-color: #fff;
+}
+
+.mbta-navbar .navbar-nav .nav-item .nav-link {
+    color: #fff;
+}
+
+.mbta-navbar .navbar-nav .nav-item .nav-link:hover {
+    color: #00588d;
+}
+
+.mbta-navbar .navbar-collapse {
+    justify-content: flex-end;
+}
+
+.navbar .navbar-brand {
+    margin-right: auto;
+}

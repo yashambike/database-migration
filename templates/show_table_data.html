@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ table_name }} Data in {{ db_name }}
+{% endblock %}
+
+{% block content %}
+<h2 class="mt-5">{{ table_name }} Data in {{ db_name }}</h2>
+<form class="mb-3" method="GET" action="{{ url_for('show_table_data', db_name=db_name, table_name=table_name) }}">
+    <div class="input-group">
+        <input type="text" class="form-control" name="search" placeholder="Search...">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+<table class="table table-bordered" id="dataTable">
+    <thead>
+        <tr>
+            {% for column in columns %}
+            <th>{{ column }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in table_data %}
+        <tr>
+            {% for value in row %}
+            <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    $('#dataTable').DataTable();
+});
+</script>
+{% endblock %}

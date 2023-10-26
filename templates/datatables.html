@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <!-- Include Handsontable CSS -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light mbta-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/homepage">MBTA</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/migrate">Migrate</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/datatables">Show Databases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/drop_database">Remove Databases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search">Search</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h1>Databases</h1>
+        <div class="form-group">
+            <label for="databases">Select a Database:</label>
+            <select id="databases" class="form-control">
+                <option value="select" selected>Select</option>
+
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="tables">Select a Table:</label>
+            <select id="tables" class="form-control">
+                <option value="select" selected>Select</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="search">Search:</label>
+            <input type="text" id="search" class="form-control" placeholder="Enter your search term">
+        </div>
+        <div id="handsontableContainer"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            var hotInstance = null;
+
+            // Function to initialize Handsontable
+            function initializeHandsontable(data) {
+
+                // $('#search').on('input', function () {
+                //     var searchValue = $(this).val().toLowerCase();
+
+                //     // Filter the data based on the search value
+                //     if (hotInstance) {
+                //         hotInstance.getPlugin('filters').clearConditions(0); // Clear existing filters
+                //         hotInstance.getPlugin('filters').addCondition(0, 'contains', [searchValue]); // Apply new filter
+                //         hotInstance.getPlugin('filters').filter(); // Apply the filter
+                //     }
+                // });
+                $('#search').on('input', function () {
+                    var searchValue = $(this).val().toLowerCase();
+
+                    // Filter the data based on the search value
+                    if (hotInstance) {
+                        hotInstance.getPlugin('filters').clearConditions(); // Clear existing filters
+
+                        // Apply the 'contains' condition to all columns
+                        for (var col = 0; col < hotInstance.countCols(); col++) {
+                            hotInstance.getPlugin('filters').addCondition(col, 'contains', [searchValue]);
+                        }
+
+                        hotInstance.getPlugin('filters').filter(); // Apply the filter
+                    }
+                });
+
+
+                if (hotInstance) {
+                    hotInstance.destroy();
+                }
+
+                hotInstance = new Handsontable(document.getElementById('handsontableContainer'), {
+
+                    data: data.slice(1), // Assuming data is an array of objects
+                    colHeaders: data[0],
+                    rowHeaders: true,
+                    dropdownMenu: true,
+                    filters: true,
+                    columnSorting: true,
+                    filteringCaseSensitive: true,
+                    columns: data.length > 0 ? Object.keys(data[0]).map(function (column) {
+                        return { data: column };
+                    }) : [],// Define empty columns if no data is available
+                    stretchH: 'all', // Stretch columns to fill the container width
+                    width: '100%', // Set the table width to 100%
+                    height: 600,
+                    search: true
+
+
+                });
+            }
+
+            // Populate databases dropdown
+            $.get('/api/get_databases', function (data) {
+
+                var databasesDropdown = $('#databases');
+                databasesDropdown.empty();
+                $.each(data, function (index, db) {
+                    databasesDropdown.append($('<option>', {
+                        value: db,
+                        text: db
+                    }));
+                });
+            });
+
+            // Function to populate the tables dropdown based on the selected database
+            function populateTablesDropdown(selectedDatabase) {
+                var tablesDropdown = $('#tables');
+                tablesDropdown.empty(); // Clear existing options
+
+                if (selectedDatabase !== 'select') {
+                    $.get('/api/get_tables/' + selectedDatabase, function (data) {
+                        $.each(data, function (index, table) {
+                            tablesDropdown.append($('<option>', {
+                                value: table,
+                                text: table
+                            }));
+                        });
+
+                        // Trigger the change event for tables dropdown
+                        tablesDropdown.trigger('change');
+                    });
+                }
+            }
+
+            // Trigger initial population of databases dropdown
+            $.get('/api/get_databases', function (data) {
+                var databasesDropdown = $('#databases');
+                databasesDropdown.empty(); // Clear existing options
+
+                $.each(data, function (index, db) {
+                    databasesDropdown.append($('<option>', {
+                        value: db,
+                        text: db
+                    }));
+                });
+
+                // Trigger the change event for databases dropdown to populate tables
+                databasesDropdown.trigger('change');
+            });
+
+            // Event handler for changing the selected database
+            $('#databases').on('change', function () {
+                var selectedDb = $(this).val();
+                populateTablesDropdown(selectedDb);
+            });
+
+            // Event handler for changing the selected table
+            $('#tables').on('change', function () {
+                var selectedDb = $('#databases').val();
+                var selectedTable = $(this).val();
+
+                // Clear any existing data and initialize with an empty dataset
+                initializeHandsontable([]);
+
+                $.get('/api/get_table_data/' + selectedDb + '/' + selectedTable, function (data) {
+                    initializeHandsontable(data.data);
+                });
+            });
+
+
+
+        });
+    </script>
+</body>
+<style>
+    /* Customize the background color of the navbar */
+    .navbar.bg-custom {
+        background-color: #ff9900;
+        /* Replace with your desired background color */
+    }
+
+    /* Customize the text color of the navbar links */
+    .navbar.bg-custom .navbar-nav .nav-link {
+        color: #fff;
+        /* Replace with your desired text color */
+    }
+</style>
+
+</html>

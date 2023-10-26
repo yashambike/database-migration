@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include Bootstrap CSS -->
+    <title>Tableau Embedded</title>
+    <!-- Include Tableau JavaScript API script -->
+    <script src="https://www.tableau.com/javascripts/api/tableau-2.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+        <div class="container">
+            <a class="navbar-brand" href="/homepage">MBTA
+                <!-- <img src="../src/img/MBTA.png" alt="MBTA"/> -->
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/migrate">Migrate</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/datatables">Show Databases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/drop_database">Remove Databases</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="tableauViz"></div>
+    <script>
+        function initTableau() {
+            var containerDiv = document.getElementById("tableauViz");
+            var embedUrl = "YOUR_EMBED_URL"; // Replace with your Tableau visualization's embed URL
+            var divId = "tableauViz"; // Replace with the ID of the HTML container element
+
+            var options = {
+                hideTabs: true,
+                onFirstInteractive: function () {
+                    console.log("Tableau viz has loaded.");
+                }
+            };
+
+            var viz = new tableau.Viz(containerDiv, embedUrl, options);
+        }
+
+        // Load the Tableau JavaScript API and initialize the visualization
+        tableau.load().then(function () {
+            initTableau();
+        });
+    </script>
+</body>
+
+
+</html>

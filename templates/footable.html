@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <!-- Include DataTables CSS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+        <div class="container">
+            <a class="navbar-brand" href="/homepage">MBTA
+                <!-- <img src="../src/img/MBTA.png" alt="MBTA"/> -->
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/migrate">Migrate</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/datatables">Show Databases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/drop_database">Remove Databases</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h1>Databases</h1>
+        <div class="form-group">
+            <label for="databases">Select a Database:</label>
+            <select id="databases" class="form-control">
+                <option value="select" selected>Select</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="tables">Select a Table:</label>
+            <select id="tables" class="form-control">
+                <option value="" selected>Select</option>
+            </select>
+        </div>
+
+        <table id="myDataTable" class="display" style="width:100%"></table>
+        <input type="text" id="search" placeholder="Search...">
+
+
+        <!-- Pagination -->
+        <div id="pagination" class="mt-3">
+            <!-- Pagination controls will be added here by DataTables -->
+        </div>
+    </div>
+
+    <!-- Your JavaScript code here -->
+    <script>
+        // $(document).ready(function () {
+
+
+        // });
+
+        // $.get('/api/get_databases', function (data) {
+
+        //     var databasesDropdown = $('#databases');
+        //     databasesDropdown.empty();
+        //     $.each(data, function (index, db) {
+        //         databasesDropdown.append($('<option>', {
+        //             value: db,
+        //             text: db
+        //         }));
+        //     });
+        // });
+
+        // // Function to populate the tables dropdown based on the selected database
+        // function populateTablesDropdown(selectedDatabase) {
+        //     var tablesDropdown = $('#tables');
+        //     tablesDropdown.empty(); // Clear existing options
+
+        //     if (selectedDatabase !== 'select') {
+        //         $.get('/api/get_tables/' + selectedDatabase, function (data) {
+        //             $.each(data, function (index, table) {
+        //                 tablesDropdown.append($('<option>', {
+        //                     value: table,
+        //                     text: table
+        //                 }));
+        //             });
+
+        //             // Trigger the change event for tables dropdown
+        //             tablesDropdown.trigger('change');
+        //         });
+        //     }
+        // }
+
+        // // Trigger initial population of databases dropdown
+        // $.get('/api/get_databases', function (data) {
+        //     var databasesDropdown = $('#databases');
+        //     databasesDropdown.empty(); // Clear existing options
+
+        //     $.each(data, function (index, db) {
+        //         databasesDropdown.append($('<option>', {
+        //             value: db,
+        //             text: db
+        //         }));
+        //     });
+
+        //     // Trigger the change event for databases dropdown to populate tables
+        //     databasesDropdown.trigger('change');
+        // });
+
+        // // Event handler for changing the selected database
+        // $('#databases').on('change', function () {
+        //     var selectedDb = $(this).val();
+        //     populateTablesDropdown(selectedDb);
+        // });
+
+        // // Event handler for changing the selected table
+        // $('#tables').on('change', function () {
+        //     var selectedDb = $('#databases').val();
+        //     var selectedTable = $(this).val();
+
+        //     // Clear any existing data and initialize with an empty dataset
+
+
+        //     $.get('/api/get_table_data/' + selectedDb + '/' + selectedTable, function (data) {
+
+        //     });
+        // });
+
+
+        $(document).ready(function () {
+            // Populate the databases dropdown
+            var databasesDropdown = $('#databases');
+            databasesDropdown.empty();
+
+            $.get('/api/get_databases', function (data) {
+                $.each(data, function (index, db) {
+                    databasesDropdown.append($('<option>', {
+                        value: db,
+                        text: db
+                    }));
+                });
+
+                // Trigger the change event for databases dropdown to populate tables
+                databasesDropdown.trigger('change');
+            });
+
+            // Function to populate the tables dropdown based on the selected database
+            function populateTablesDropdown(selectedDatabase) {
+                var tablesDropdown = $('#tables');
+                tablesDropdown.empty(); // Clear existing options
+
+                if (selectedDatabase !== 'select') {
+                    $.get('/api/get_tables/' + selectedDatabase, function (data) {
+                        $.each(data, function (index, table) {
+                            tablesDropdown.append($('<option>', {
+                                value: table,
+                                text: table
+                            }));
+                        });
+
+                        // Trigger the change event for tables dropdown
+                        tablesDropdown.trigger('change');
+                    });
+                }
+            }
+
+            // Event handler for changing the selected database
+            $('#databases').on('change', function () {
+                var selectedDb = $(this).val();
+                populateTablesDropdown(selectedDb);
+            });
+
+            // Rest of your code
+            var dataTable = $('#myDataTable').DataTable({
+                data: [],
+                columns: []
+            });
+
+            $('#tables').on('change', function () {
+                var selectedDb = $('#databases').val();
+                var selectedTable = $(this).val();
+
+                $.get('/api/get_table_data/' + selectedDb + '/' + selectedTable, function (data) {
+                    // Update the dataTable with new data
+                    dataTable.clear().rows.add(data).draw();
+                });
+            });
+
+            // Other code
+        });
+
+    </script>
+</body>
+
+</html>
