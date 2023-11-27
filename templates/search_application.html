@@ -40,7 +40,6 @@
         th {
             background-color: #f2f2f2;
         }
-
     </style>
 </head>
 
@@ -70,55 +69,58 @@
                 </ul>
             </div>
         </div>
-    </nav>    
-
-    <form method="POST">
-        <div class="form-group">
-            <label for="database">Select a database:</label>
-            <select name="table" id="database" class="form-control">
-                <option value="all">All</option>
-                <!-- Add more table options here if needed -->
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="query">Search:</label>
-            <input type="text" name="query" id="query" class="form-control" placeholder="Enter your search term">
-            <input type="hidden" name="selected_database" id="selected_database">
-            <input type="submit" value="Search">
-        </div>
+    </nav>
+    <div class="container mt-5">
+        <form method="POST">
+            <div class="form-group">
+                <label for="database">Select a database:</label>
+                <select name="table" id="database" class="form-control">
+                    <option value="all" value="{{ selected_database }}">All</option>
+                    <!-- Add more table options here if needed -->
+                </select>
+            </div>
 
 
-    </form>
+            <div class="form-group">
+                <label for="query">Search:</label>
+                <input type="text" name="query" id="query" class="form-control" autocomplete="off" placeholder="Enter your search term">
+                <input type="hidden" name="selected_database" id="selected_database" value="{{ selected_database }}">
+                <input type="submit" value="Search">
+            </div>
 
-    <h2>Search Results</h2>
-    {% if results %}
-    <div class="table-container">
-        <table border="1">
-            <thead>
-                <tr>
-                    {% for key, value in results[0].items() %}
-                    <th>{{ key }}</th>
+        </form>
+        <h2>Search Results</h2>
+        {% if results %}
+        <div class="table-container">
+            <table border="1">
+                <thead>
+                    <tr>
+                        {% for key, value in results[0].items() %}
+                        <th>{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in results %}
+                    <tr>
+                        {% for key, value in record.items() %}
+                        <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
                     {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for record in results %}
-                <tr>
-                    {% for key, value in record.items() %}
-                    <td>{{ value }}</td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p>No results found.</p>
+        {% endif %}
     </div>
-    {% else %}
-    <p>No results found.</p>
-    {% endif %}
+
+
     <script>
         $(document).ready(function () {
-            var selectedDatabase = ''; // Initialize with an empty string
+            // Initialize the selectedDatabase variable with the value from the input field
+            var selectedDatabase = $('#selected_database').val();
 
             // Make an AJAX request to fetch dynamic database options
             $.get('/api/get_databases', function (data) {
@@ -138,9 +140,6 @@
                     }
                 });
 
-                // Update the selected_database input field with the initial selected value
-                $('#selected_database').val(selectedDatabase);
-
                 // Event handler for changing the selected database
                 databasesDropdown.on('change', function () {
                     selectedDatabase = $(this).val();
@@ -159,6 +158,7 @@
                 });
             });
         });
+
     </script>
 </body>
 

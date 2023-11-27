@@ -462,7 +462,7 @@ def perform_search(query, selected_database):
         results = [record for record, score in zip(records, cosine_similarities) if score > 0.0]
         results.sort(key=lambda x: -cosine_similarities[records.index(x)])
 
-        print(f"Results {results}")
+        #print(f"Results {results}")
 
         return results
     except Exception as e:
@@ -488,7 +488,7 @@ def search():
     # Return an empty result for the initial page load or if no valid search parameters are provided
     return render_template('search_application.html', results=[])
 
-# Rest of your code...
+
 
 
 if __name__ == '__main__':

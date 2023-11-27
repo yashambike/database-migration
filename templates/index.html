@@ -23,18 +23,21 @@
         .header p {
             font-size: 1.5rem; /* Adjust font size as needed */
         }
+      
+        .mbta-logo {
+    order: -1; /* Move the logo to the start */
+    margin-right: 15px; /* Add some margin to separate it from the toggle button */
+}
 
         /* Custom styles for the container */
-        .container {
-            margin-top: 20px;
-        }
+        
     </style>
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light mbta-navbar">
         <div class="container">
-            <a class="navbar-brand" href="/homepage">MBTA</a>
+            <a class="navbar-brand mbta-logo" href="/homepage">MBTA</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -57,7 +60,6 @@
             </div>
         </div>
     </nav>
-
     <!-- Header -->
     <header class="header">
         <div class="container">

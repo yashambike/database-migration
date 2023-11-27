@@ -38,6 +38,10 @@
     justify-content: flex-end;
 }
 
-.navbar .navbar-brand {
+/* .navbar .navbar-brand {
     margin-right: auto;
+} */
+.mbta-logo {
+    order: -1; /* Move the logo to the start */
+    margin-right: 15px; /* Add some margin to separate it from the toggle button */
 }

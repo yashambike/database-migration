@@ -42,7 +42,6 @@
     </nav>
 
     <div class="container mt-5">
-        <h1>Delete Database</h1>
         <script>
             function confirmDelete(databaseName) {
                 if (confirm(`Are you sure you want to delete the database '${databaseName}'?`)) {
@@ -55,11 +54,11 @@
         <form class="container mt-4" method="POST"
             onsubmit="return confirm('Are you sure you want to delete the database?');">
         </form>
-        <h3 class="container mt-4">Database List:</h3>
+        <!-- <h3 class="container mt-4">Database List:</h3> -->
         <table class="table table-bordered container">
             <thead>
                 <tr>
-                    <th>Database Name</th>
+                    <th>Databases</th>
                     <th>Action</th>
                 </tr>
             </thead>

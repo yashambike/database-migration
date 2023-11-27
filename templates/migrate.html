@@ -39,7 +39,7 @@
     </nav>
 
     <div class="container mt-5">
-        <h1>Database Migration</h1>
+       
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <div class="alert alert-success">
@@ -57,7 +57,7 @@
                 <input type="text" class="form-control" id="db_name" name="db_name" autocomplete="off" required>
             </div>
             <div class="form-group">
-                <label for="excel_file">Excel File:</label>
+                <label for="excel_file">Choose Excel File:</label>
                 <input type="file" class="form-control-file" id="excel_file" name="excel_file" accept=".xlsx" required>
             </div>
             <button type="submit" class="btn btn-primary">Migrate</button>
